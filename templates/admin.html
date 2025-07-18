@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Dashboard IPH</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--navy-blue);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--navy-blue);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--medium-blue);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+        
+        .btn-admin {
+            background: var(--accent-green);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-admin:hover {
+            background: #5e8f3a;
+            transform: translateY(-2px);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--medium-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            color: var(--navy-blue);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <a href="/" class="back-link">← Kembali ke Dashboard</a>
+        
+        <div class="admin-header">
+            <h1>🔐 Panel Admin</h1>
+            <p>Input Data IPH Terbaru</p>
+        </div>
+        
+        <form id="adminForm">
+            <div class="form-group">
+                <label for="inputDate">Tanggal:</label>
+                <input type="date" id="inputDate" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="inputIPH">Nilai IPH (%):</label>
+                <input type="number" id="inputIPH" step="0.01" placeholder="Contoh: 2.34" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="inputCommodities">Komoditas Pendorong (Opsional):</label>
+                <textarea id="inputCommodities" rows="3" placeholder="Contoh: Cabai Merah (+0.08%), Bawang Merah (+0.05%), Telur Ayam Ras (-0.02%)"></textarea>
+            </div>
+            
+            <button type="submit" class="btn-admin">💾 Simpan Data</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('adminForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                date: document.getElementById('inputDate').value,
+                iph_value: parseFloat(document.getElementById('inputIPH').value),
+                commodities: document.getElementById('inputCommodities').value
+            };
+            
+            try {
+                const response = await fetch('/api/admin/add-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('✅ Data berhasil disimpan!');
+                    document.getElementById('adminForm').reset();
+                } else {
+                    alert('❌ Error: ' + result.error);
+                }
+                
+            } catch (error) {
+                alert('❌ Gagal menyimpan data: ' + error.message);
+            }
+        });
+        
+        // Set default date to today
+        document.getElementById('inputDate').valueAsDate = new Date();
+    </script>
+</body>
+</html>

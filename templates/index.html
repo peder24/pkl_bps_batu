@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Prediksi IPH Kota Batu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1/dist/chartjs-adapter-moment.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <h1>Dashboard Prediksi IPH Kota Batu</h1>
+            <div class="header-info">
+                <div class="last-update">
+                    Data diperbarui per <span id="lastUpdate">Loading...</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-light" id="statusLight"></div>
+                    <span id="statusText">Loading...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>PANEL KONTROL</h2>
+            
+            <!-- Model Recommendation -->
+            <div id="modelRecommendation">
+                <div class="insights-loading">
+                    <span>Memuat rekomendasi...</span>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="modelSelect">Pemilihan Model:</label>
+                <select id="modelSelect">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Rentang Waktu:</label>
+                <div class="time-range-buttons">
+                    <button class="time-btn active" data-range="3">3 Bulan</button>
+                    <button class="time-btn" data-range="6">6 Bulan</button>
+                    <button class="time-btn" data-range="all">Semua Data</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="whatIfInput">Analisis Skenario "What-If":</label>
+                <input type="number" id="whatIfInput" placeholder="Masukkan IPH Minggu Ini (%)" step="0.01">
+                <button class="btn-primary" onclick="simulateForecast()">Simulasikan Forecast</button>
+            </div>
+
+            <button class="btn-compare" onclick="showModelComparison()">📊 Bandingkan Model</button>
+            <button class="btn-primary" onclick="downloadData()">📥 Download Data</button>
+            
+            <!-- Quick Insights -->
+            <div id="quickInsights" class="quick-insights"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- KPI Cards -->
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <div class="kpi-value" id="predictionValue">Loading...</div>
+                    <div class="kpi-label">Prediksi Minggu Depan</div>
+                    <div class="kpi-change" id="predictionChange">Loading...</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="accuracyValue">Loading...</div>
+                    <div class="kpi-label">Akurasi Model (MAE)</div>
+                    <div class="kpi-change">Model Aktif</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="lastChangeValue">Loading...</div>
+                    <div class="kpi-label">Perubahan Terakhir</div>
+                    <div class="kpi-change">Data Terbaru</div>
+                </div>
+            </div>
+
+            <!-- Main Chart -->
+            <div class="chart-container">
+                <h3 class="chart-title">Grafik Forecast IPH Kota Batu</h3>
+                <div class="chart-wrapper">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Insights Container - INI YANG PENTING -->
+            <div id="insightsContainer" class="insights-container">
+                <div class="insights-loading">
+                    <span>Memuat insight...</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
